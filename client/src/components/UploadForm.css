@@ -1,0 +1,90 @@
+.fileDropperContainer {
+  width: 1000px;
+  /* border: 1px solid pink; */
+  position:relative;
+}
+
+.fileDropArea {
+  /* border: 1px solid purple; */
+  /* background-color: yellow; */
+  /* display: relative; */
+}
+
+.file-dropper {
+  border: 1px dashed gainsboro;
+  height: 145px;
+  width: 1000px;
+  background-color: #FFFFFF;
+  /* border-radius: 10px; */
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.file-dropper input {
+  position: absolute;
+  top:0;
+  box-sizing: border-box;
+  border: 1px solid red;
+  width: inherit;
+  height: inherit;
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.fileUploadButton {
+  display: inline-block;
+  width: 1000px;
+  height: 40px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.file-dropper:hover {
+  background-color: whitesmoke;
+  color: black;
+  transition: 0.5s;
+}
+
+.fileInfoRow {
+  display: flex;
+  justify-content: space-between;
+  /* border: 1px solid green; */
+}
+
+.fileInfoRow span:nth-of-type(1) {
+  /* border: 1px solid red; */
+  width: 2%;
+  text-align: center;
+  height: 20px;
+}
+
+.fileInfoRow span:nth-of-type(2) {
+  /* border: 1px solid blue; */
+  width: 40%;
+  height: 20px;
+}
+
+
+.fileInfoRow span:nth-of-type(3) {
+  /* border: 1px solid blue; */
+  text-align: center;
+  width: 30%;
+  height: 20px;
+}
+
+.fileInfoRow span:nth-of-type(4) {
+  /* border: 1px solid blue; */
+  width: 20%;
+  height: 20px;
+  text-align: right;
+  padding-right: 16px;
+}
+
+.file_upload__message{
+  display: flex;
+  height: inherit;
+  justify-content: center;
+  align-items: center;
+}
