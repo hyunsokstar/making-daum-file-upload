@@ -8,24 +8,15 @@ import CloseButton from "./CloseButton"
 
 
 function UploadForm() {
-    // const [file, setFile] = useState(null);
     const [files, setFiles] = useState([])
-    // const [fileName, setFileName] = useState()
     const [fileNames, setFileNames] = useState([])
-    const [percent, setPercent] = useState(0)
+    const [percent, setPercent] = useState([])
 
     const imageSelectHandler = (event) => {
         console.log("image selecte handler 실행");
-        // const imageFile = event.target.files[0]
         const imageFiles = event.target.files
-        // setFile(imageFile)
         setFiles(imageFiles)
-        // if (imageFiles != undefined) {
-        //     setFileName(imageFile.name)
-        // }
 
-        // 파일 이름 여러개로 설정 하기
-        // const imageFiles = event.target.files;
         const fileNames = [...imageFiles];
         console.log(typeof fileNames);
         setFileNames(fileNames);
@@ -36,7 +27,6 @@ function UploadForm() {
         console.log('submit 함수 실행 check')
         const formData = new FormData()
 
-        // formData.append('image', file)
         if (files != null) {
             console.log("files : ", files);
             for (let file of files) {
@@ -48,21 +38,37 @@ function UploadForm() {
         }
 
         try {
-            const res = await axios.post("/upload", formData, {
-                headers: { 'Content-Type': 'multi/form-data' },
-                onUploadProgress: (e) => {
-                    console.log(ProgressEvent);
-                    setPercent(Math.round((100 * e.loaded) / e.total))
-                }
-            })
 
-            console.log({ res })
-            toast.success('success!!')
+            // const res = await axios.post("/upload", formData, {
+            //     headers: { 'Content-Type': 'multi/form-data' },
+            //     onUploadProgress: (e) => {
+            //         console.log(ProgressEvent);
+            //         setPercent(Math.round((100 * e.loaded) / e.total))
+            //     }
+            // })
+
+            await Promise.all(
+                [...files].map((file, index) => {
+                    const res = axios.post("/upload", formData, {
+                        headers: { 'Content-Type': 'multi/form-data' },
+                        onUploadProgress: (e) => {
+                            setPercent((prevData) => {
+                                const newData = [...prevData];
+                                newData[index] = Math.round((100 * e.loaded) / e.total);
+                                return newData;
+                            })
+                        }
+                    })
+                    console.log({ res })
+                })
+            )
+
+            await toast.success('success!!')
 
             setTimeout(() => {
-                setPercent(0);
+                setPercent([]);
                 setFileNames([]);
-            }, 2000)
+            }, 50000)
 
         } catch (err) {
             toast.error('fail!')
@@ -70,38 +76,14 @@ function UploadForm() {
         }
     }
 
-    // const deleteRow = (e) => {
-    //     e.preventDefault();
-    //     alert("row 삭제");
-    //     setFileName("")
-    // }
-
-    // const fileNameRow = (fileName) => {
-    //     return (
-    //         <span className="fileInfoRow">
-    //             <span>1</span>
-    //             <span>{fileName}</span>
-    //             <span>
-    //                 <ProgressBar percent={percent} />
-    //             </span>
-    //             <span>
-    //                 <a onClick={(e) => deleteRow(e)}>
-    //                     <CloseButton />
-    //                 </a>
-    //             </span>
-    //         </span>
-    //     )
-    // }
-
-    const FileNamedTemplate = fileNames.map((file) => {
+    const FileNamesTemplate = fileNames.map((file,i) => {
         console.log("file : ", file);
         return (
-            // <div key={file.name}>{file.name}</div>
             <span className="fileInfoRow">
                 <span>1</span>
                 <span>{file.name}</span>
                 <span>
-                    <ProgressBar percent={percent} />
+                    <ProgressBar percent={percent[i]} />
                 </span>
                 <span>
                     <a>
@@ -109,7 +91,6 @@ function UploadForm() {
                     </a>
                 </span>
             </span>
-
         )
     })
 
@@ -119,8 +100,7 @@ function UploadForm() {
                 <form onSubmit={onSubmit}>
                     <label className="fileDropArea" htmlFor="fileDropArea">
                         <div className="file-dropper" >
-                            {fileNames.length != 0 ? FileNamedTemplate : <div className="file_upload__message">파일을 선택해 주세요</div>}
-                            {/* <input id="image" type="file" onChange={imageSelectHandler} id="fileDropArea" /> */}
+                            {fileNames.length != 0 ? FileNamesTemplate : <div className="file_upload__message">파일을 선택해 주세요</div>}
                             <input id="image" type="file" onChange={imageSelectHandler} id="fileDropArea" multiple />
                         </div>
                         <button
