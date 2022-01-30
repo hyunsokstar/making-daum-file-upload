@@ -93,11 +93,17 @@ function UploadForm() {
 
     return (
         <div>
+
+
+        <label htmlFor="file-drozone" className="file-label">12</label>
+        <br />
+        <br />
             <div className="fileDropperContainer">
+
                 <form onSubmit={onSubmit}>
                         <div className="file-dropper" >
                             {fileNames.length != 0 ? FileNamesTemplate : <div className="file_upload__message">파일을 선택해 주세요</div>}
-                            <input id="image" type="file" onChange={imageSelectHandler} multiple />
+                            <input id="image" type="file" onChange={imageSelectHandler} id="file-drozone" onClick="" multiple />
                         </div>
                         <button
                             className="fileUploadButton"
