@@ -6,7 +6,7 @@ import ProgressBar from './ProgressBar'
 import CloseButton from "./CloseButton"
 
 
-
+// file upload form
 function UploadForm() {
     const [files, setFiles] = useState([])
     const [fileNames, setFileNames] = useState([])
@@ -22,6 +22,7 @@ function UploadForm() {
         setFileNames(fileNames);
     };
 
+    // set file data to form Object and axios request to file upload to server
     const onSubmit = async (e) => {
         e.preventDefault()
         console.log('submit 함수 실행 check')
@@ -38,14 +39,6 @@ function UploadForm() {
         }
 
         try {
-
-            // const res = await axios.post("/upload", formData, {
-            //     headers: { 'Content-Type': 'multi/form-data' },
-            //     onUploadProgress: (e) => {
-            //         console.log(ProgressEvent);
-            //         setPercent(Math.round((100 * e.loaded) / e.total))
-            //     }
-            // })
 
             await Promise.all(
                 [...files].map((file, index) => {
@@ -76,6 +69,10 @@ function UploadForm() {
         }
     }
 
+    const deleteRow = (i) => {
+        console.log('delete row 클릭');
+    }
+
     const FileNamesTemplate = fileNames.map((file,i) => {
         console.log("file : ", file);
         return (
@@ -86,8 +83,8 @@ function UploadForm() {
                     <ProgressBar percent={percent[i]} />
                 </span>
                 <span>
-                    <a>
-                        <CloseButton />
+                    <a onClick = {() => deleteRow(i)}>
+                        <CloseButton/> 12
                     </a>
                 </span>
             </span>
@@ -98,10 +95,9 @@ function UploadForm() {
         <div>
             <div className="fileDropperContainer">
                 <form onSubmit={onSubmit}>
-                    <label className="fileDropArea" htmlFor="fileDropArea">
                         <div className="file-dropper" >
                             {fileNames.length != 0 ? FileNamesTemplate : <div className="file_upload__message">파일을 선택해 주세요</div>}
-                            <input id="image" type="file" onChange={imageSelectHandler} id="fileDropArea" multiple />
+                            <input id="image" type="file" onChange={imageSelectHandler} multiple />
                         </div>
                         <button
                             className="fileUploadButton"
@@ -111,7 +107,6 @@ function UploadForm() {
                         >
                             제출
                         </button>
-                    </label>
                 </form>
             </div>
         </div>
