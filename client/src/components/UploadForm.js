@@ -84,7 +84,7 @@ function UploadForm() {
                 </span>
                 <span>
                     <a onClick = {() => deleteRow(i)}>
-                        <CloseButton/> 12
+                        <CloseButton/>
                     </a>
                 </span>
             </span>

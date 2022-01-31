@@ -1,16 +1,29 @@
 import React from 'react'
-import UploadForm from './components/UploadForm'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+
+import Main from "./Pages/Main";
+import Dropzone from './Pages/Dropzone';
 
 
 function App() {
   return (
-    <>
-      <ToastContainer />
-      <h2>사진첩</h2>
-      <UploadForm />
-    </>
+    <div>
+      <Router>
+
+        <div className="list">
+          <ul>
+            <li><Link to="main">Main</Link></li>
+            <li><Link to="dropzone">DropZone</Link></li>
+          </ul>
+        </div>
+
+        <Routes>
+          <Route exact path="main" element={<Main />} />
+          <Route exact path="dropzone" element={<Dropzone />} />
+        </Routes>
+      </Router>
+
+    </div>
   )
 }
 
