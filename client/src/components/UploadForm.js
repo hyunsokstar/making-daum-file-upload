@@ -93,9 +93,6 @@ function UploadForm() {
 
     return (
         <div>
-
-
-        <label htmlFor="file-drozone" className="file-label">12</label>
         <br />
         <br />
             <div className="fileDropperContainer">

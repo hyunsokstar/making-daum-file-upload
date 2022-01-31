@@ -91,11 +91,3 @@
   justify-content: center;
   align-items: center;
 }
-
-.file-label {
-  background-color: red;
-  height: 100px;
-  width: 50%;
-  display: inline-block;
-  border: 2px solid black;
-}
