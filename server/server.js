@@ -38,6 +38,7 @@ app.use('/uploads', express.static('uploads'))
 
 // app.post('/upload', upload.single('image'), (req, res) => {
 app.post('/upload', upload.array('image', 5), async (req, res) => {
+  console.log("파일 업로드 요청 받았어");
   console.log(req.file)
   res.json(req.file)
 

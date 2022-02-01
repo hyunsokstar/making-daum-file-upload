@@ -1,6 +1,10 @@
-// 1. useState 추가
 import React, { useMemo, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import "./Dropzone.css";
+
+// 55 axios , toast 모듈 임포트
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const baseStyle = {
     flex: 1,
@@ -15,7 +19,8 @@ const baseStyle = {
     backgroundColor: '#fafafa',
     color: '#bdbdbd',
     outline: 'none',
-    transition: 'border .24s ease-in-out'
+    transition: 'border .24s ease-in-out',
+    height: "100px"
 };
 
 const focusedStyle = {
@@ -31,7 +36,6 @@ const rejectStyle = {
 };
 
 function Dropzone(props) {
-    // 2. 드래그앤 드롭한 파일정보를 담을 스테이트 변수 선언
     const [files, setFiles] = useState([]);
 
     const {
@@ -42,14 +46,9 @@ function Dropzone(props) {
         isDragReject,
         acceptedFiles
     } = useDropzone({
-        // 3. orDrop 함수를 설정해서 파일 드래그앤 드롭한 파일 정보가 setFiles 되도록 하기
-        onDrop: acceptedFiles => {
-            // 파일 정보 로그로 출력1
-            console.log("acceptedFiles : ", acceptedFiles);
-            setFiles(acceptedFiles);
-            // state 에 담은 파일 정보 출력
-            console.log("files : ", files);
-        }
+        noClick: true,
+        // 11. onDrop 함수 밖으로 빼기
+        onDrop: acceptedFiles => onDrop(acceptedFiles)
     });
 
     const style = useMemo(() => ({
@@ -63,28 +62,71 @@ function Dropzone(props) {
         isDragReject
     ]);
 
-    // 4. state 배열 변수에 저장된 파일 정보가 출력 되도록 하기 
-    const filesTemplate = files.map(file => (
-        <li key={file.path}>
-            {file.path} - {file.size} bytes
-        </li>
-    ));
+    // 22. 여기로 옮기기 
+    const onDrop = async (acceptedFiles) => {
+        
+        console.log("acceptedFiles : ", acceptedFiles);
+        setFiles(acceptedFiles);
+        console.log("files : ", files);
 
-    return (
-        <div className="container">
-            <div {...getRootProps({ style })}>
-                <input {...getInputProps()} />
-                <p>Drag 'n' drop some files here, or click to select files</p>
+        // 33. files가 null 이 아닐 경우 파일 업로드 데이터 FormData 에 설정 되도록 하기 + axios로 파일 업로드 요청 하도록 하기
+        const formData = new FormData()
+        console.log("current files : ", files);
+
+        if (files != null) {
+            console.log("files 는 null 이 아닙니다 : ", files);
+            for (let file of files) {
+                formData.append("image", file);
+            }
+
+            alert("files : ", files)
+
+            // 44 axios로 서버에 파일 업로드 요청 날리기
+            try {
+                const res = await axios.post("/upload", formData, {
+                    headers: { 'Content-Type': 'multi/form-data' },
+                })
+                console.log("res : ", res)
+                toast.success('success!!')
+
+            } catch (err) {
+                toast.error('fail!')
+                console.log(err)
+            }
+        } else {
+            console.log("files는 null 입니다");
+        }
+    }
+
+        const deleteRow = (file_name) => {
+            console.log("file_name : ", file_name);
+            const result = files.filter((file) => {
+                return (
+                    file.name != file_name
+                )
+            })
+            setFiles(result)
+        }
+
+        const filesTemplate = files.map((file, i) => (
+            <div key={file.path} className='fileRow'>
+                <div>{i + 1}</div>
+                <div>{file.name}</div>
+                <div>{file.size}</div>
+                <div className='deleteButton'><button onClick={() => deleteRow(file.name)}>삭제</button></div>
             </div>
+        ));
 
-            <aside>
-                <h4>Files</h4>
-                <ul>{filesTemplate}</ul>
-            </aside>
+        return (
+            <div className="container">
+                <div {...getRootProps({ style })}>
+                    <input {...getInputProps()} />
+                    {filesTemplate}
+                </div>
 
-        </div>
-    );
-}
+            </div>
+        );
+    }
 
 
-export default Dropzone
+    export default Dropzone

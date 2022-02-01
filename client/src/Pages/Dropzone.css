@@ -1,0 +1,9 @@
+.fileRow{
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(25%, auto));
+}
+
+.deleteButton {
+    text-align: right;
+}

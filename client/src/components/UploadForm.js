@@ -15,6 +15,9 @@ function UploadForm() {
     const imageSelectHandler = (event) => {
         console.log("image selecte handler 실행");
         const imageFiles = event.target.files
+
+        console.log("imageFiles : ", imageFiles);
+
         setFiles(imageFiles)
 
         const fileNames = [...imageFiles];
@@ -28,20 +31,24 @@ function UploadForm() {
         console.log('submit 함수 실행 check')
         const formData = new FormData()
 
-        if (files != null) {
-            console.log("files : ", files);
-            for (let file of files) {
-                formData.append("image", file);
-            }
-        } else {
-            alert("파일을 선택해 주세요");
-            return;
-        }
+        // if (files != null) {
+        //     console.log("files : ", files);
+        //     for (let file of files) {
+        //         formData.append("image", file);
+                
+        //     }
+        // } else {
+        //     alert("파일을 선택해 주세요");
+        //     return;
+        // }
 
         try {
 
             await Promise.all(
                 [...files].map((file, index) => {
+                    formData.delete('image');
+                    formData.append("image", file);
+
                     const res = axios.post("/upload", formData, {
                         headers: { 'Content-Type': 'multi/form-data' },
                         onUploadProgress: (e) => {
@@ -61,7 +68,7 @@ function UploadForm() {
             setTimeout(() => {
                 setPercent([]);
                 setFileNames([]);
-            }, 50000)
+            }, 2000)
 
         } catch (err) {
             toast.error('fail!')
